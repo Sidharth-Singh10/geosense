@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import * as THREE from 'three';
+import Maps from "../maps/page";
+import Navbar from "../components/navbar";
 export default function GlobePage() {
   const globeRef = useRef();
 
@@ -42,10 +44,14 @@ export default function GlobePage() {
   return (
     <>
       <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
-
-      <div style={{ margin: 0 }}>
-        <div ref={globeRef} id="globeViz" />
+      <div className="bg-black">
+      <Navbar />
       </div>
+      <div style={{ margin: 0 }} className="z-10">
+        <div ref={globeRef} id="globeViz" className="z-1000" />
+      </div>
+      <h1 className="">Hi there2</h1>
+      <Maps />
     </>
   );
 }
