@@ -5,9 +5,10 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [overlayOn, setOverlayOn] = useState(false);
 
   return (
-    <UserContext.Provider value={{ selectedPlace, setSelectedPlace }}>
+    <UserContext.Provider value={{ selectedPlace, setSelectedPlace,overlayOn, setOverlayOn }}>
       {children}
     </UserContext.Provider>
   );
