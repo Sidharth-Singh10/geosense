@@ -122,7 +122,7 @@ export default function Gmaps() {
   const [markerRef, marker] = useAdvancedMarkerRef();
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full opacity-30" id="map">
       <APIProvider
         apiKey={"AIzaSyCBUWqISO_DOQUKhwb7q09wQteK87WOEec"}
         libraries={["places"]}
