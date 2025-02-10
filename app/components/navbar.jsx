@@ -1,5 +1,6 @@
 import { Search, MapPin, Route, RefreshCcw } from "lucide-react";
 import Image from 'next/image';
+import PlaceAutocomplete from "./autocomplete";
 
 export default function Navbar() {
     return (
@@ -7,11 +8,7 @@ export default function Navbar() {
             {/* Left Section - Search Bar */}
             <div className="flex items-center bg-gray-300 px-4 py-2 rounded-full w-1/3 mr-8">
                 <Search className="text-gray-500 w-5 h-5 mr-2" />
-                <input
-                    type="text"
-                    placeholder="Search geosense"
-                    className="bg-transparent text-gray-800 placeholder-gray-900 focus:outline-none w-full"
-                />
+                <PlaceAutocomplete/>
             </div>
 
             {/* Center Section - Navigation Icons */}

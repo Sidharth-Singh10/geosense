@@ -11,6 +11,7 @@ import {
   useMapsLibrary,
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
+import { useUserContext } from "./user_context";
 
 const MapHandler = ({ place, marker }) => {
   const map = useMap();
@@ -117,7 +118,7 @@ const ClickLogger = () => {
 };
 
 export default function Gmaps() {
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const { selectedPlace } = useUserContext();
   const [markerRef, marker] = useAdvancedMarkerRef();
 
   return (
@@ -140,9 +141,6 @@ export default function Gmaps() {
           <LogScaleValue />
           <ClickLogger /> 
           <AdvancedMarker ref={markerRef} position={null} />
-          <MapControl position={ControlPosition.TOP}>
-            <PlaceAutocomplete onPlaceSelect={setSelectedPlace} />
-          </MapControl>
           <MapHandler place={selectedPlace} marker={marker} />
         </Map>
       </APIProvider>
