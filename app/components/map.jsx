@@ -12,6 +12,7 @@ import {
   useAdvancedMarkerRef,
 } from "@vis.gl/react-google-maps";
 import { useUserContext } from "./user_context";
+import DrawRectangles from "./konva";
 
 const MapHandler = ({ place, marker }) => {
   const map = useMap();
@@ -95,7 +96,7 @@ const PlaceAutocomplete = ({ onPlaceSelect }) => {
   );
 };
 
-const ClickLogger = () => {
+const ClickLogger = ({ onMapClick }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -105,6 +106,7 @@ const ClickLogger = () => {
       const lat = event.latLng.lat();
       const lng = event.latLng.lng();
       console.log(`Clicked at: Latitude: ${lat}, Longitude: ${lng}`);
+      onMapClick({ lat, lng });
     };
 
     map.addListener("click", handleClick);
@@ -117,10 +119,26 @@ const ClickLogger = () => {
   return null;
 };
 
-export default function Gmaps() {
-  const { selectedPlace } = useUserContext();
-  const [markerRef, marker] = useAdvancedMarkerRef();
+const PolylineRenderer = ({ path }) => {
+  return path.length > 1 ? (
+    <Polyline
+      path={path}
+      geodesic={true}
+      strokeColor="#FF0000"
+      strokeOpacity={1.0}
+      strokeWeight={2}
+    />
+  ) : null;
+};
 
+export default function Gmaps() {
+  const { selectedPlace, overlayOn } = useUserContext();
+  const [markerRef, marker] = useAdvancedMarkerRef();
+  const [polylinePath, setPolylinePath] = useState([]);
+  const handleMapClick = (newPoint) => {
+    setPolylinePath((prevPath) => [...prevPath, newPoint]);
+  };
+  // console.log("overlayOn", overlayOn);
   return (
     <div className="h-full w-full opacity-30" id="map">
       <APIProvider
@@ -134,15 +152,20 @@ export default function Gmaps() {
           defaultCenter={{ lat: 22.54992, lng: 0 }}
           gestureHandling={"greedy"}
           disableDefaultUI={true}
-          className="w-full h-full"
+          className="w-full h-full z-0"
           mapTypeId="satellite"
           scaleControl="true"
         >
-          <LogScaleValue />
-          <ClickLogger /> 
+          {/* <LogScaleValue /> */}
+          <ClickLogger onMapClick={handleMapClick} />
           <AdvancedMarker ref={markerRef} position={null} />
           <MapHandler place={selectedPlace} marker={marker} />
         </Map>
+        {overlayOn && (
+          <div className="absolute top-full left-0 w-full h-full bg-transparent z-[998] pointer-events-auto">
+            <DrawRectangles />
+          </div>
+        )}
       </APIProvider>
     </div>
   );

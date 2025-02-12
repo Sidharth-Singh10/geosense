@@ -9,10 +9,6 @@ export default function Maps() {
   return (
     <div className="h-screen">
         <Gmaps></Gmaps>
-      <button onClick={() => setIsDrawingMode(!isDrawingMode)}>
-        {isDrawingMode ? 'Disable' : 'Enable'} Drawing Mode
-      </button>
-      <DrawingOverlay isEnabled={isDrawingMode} />
     </div>
   );
 }

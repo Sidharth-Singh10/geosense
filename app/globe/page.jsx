@@ -2,19 +2,23 @@
 
 import { useEffect, useRef } from "react";
 import Script from "next/script";
-import * as THREE from 'three';
+import * as THREE from "three";
 import Maps from "../maps/page";
 import Navbar from "../components/navbar";
 import { useUserContext } from "../components/user_context";
+import DrawRectangles from "../components/konva";
 export default function GlobePage() {
   const globeRef = useRef();
+  const { overlayOn } = useUserContext();
 
   const initGlobe = () => {
-    const world = globeRef.current.__world = new Globe(globeRef.current, { animateIn: false })
+    const world = (globeRef.current.__world = new Globe(globeRef.current, {
+      animateIn: false,
+    })
       .globeImageUrl(
         "//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
       )
-      .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png");
+      .bumpImageUrl("//unpkg.com/three-globe/example/img/earth-topology.png"));
 
     // Auto-rotate
     world.controls().autoRotate = true;
@@ -44,14 +48,14 @@ export default function GlobePage() {
 
   // When the selectedPlace is not null or changed we need to rotate the map at high speed and zoom and scroll to the bottom of the screen.
   const { selectedPlace } = useUserContext();
-  console.log("Selected Place:", selectedPlace);
+  // console.log("Selected Place:", selectedPlace);
   useEffect(() => {
     if (selectedPlace) {
       const world = globeRef.current.__world;
       if (world) {
         // Increase rotation speed and zoom in with transition
         const targetRotationSpeed = 5;
-        const targetZoom = 50; // Double the zoom value
+        const targetZoom = 20; // Double the zoom value
         const transitionDuration = 2000; // Transition duration in milliseconds
 
         const initialRotationSpeed = world.controls().autoRotateSpeed;
@@ -63,8 +67,11 @@ export default function GlobePage() {
           const elapsedTime = currentTime - startTime;
           const progress = Math.min(elapsedTime / transitionDuration, 1);
 
-          world.controls().autoRotateSpeed = initialRotationSpeed + (targetRotationSpeed - initialRotationSpeed) * progress;
-          world.camera().position.z = initialZoom + (targetZoom - initialZoom) * progress;
+          world.controls().autoRotateSpeed =
+            initialRotationSpeed +
+            (targetRotationSpeed - initialRotationSpeed) * progress;
+          world.camera().position.z =
+            initialZoom + (targetZoom - initialZoom) * progress;
 
           if (progress < 1) {
             requestAnimationFrame(animateTransition);
@@ -74,10 +81,10 @@ export default function GlobePage() {
               top: document.body.scrollHeight,
             });
             // Increase the opacity of the element to be 100 on scroll
-            const bottomElement = document.getElementById('map');
+            const bottomElement = document.getElementById("map");
             if (bottomElement) {
               bottomElement.style.transition = `opacity ${transitionDuration}ms`;
-              bottomElement.style.opacity = '1';
+              bottomElement.style.opacity = "1";
             }
           }
         };
@@ -90,14 +97,25 @@ export default function GlobePage() {
 
   return (
     <>
-      <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
+      {/* <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
       <div className="bg-black pt-8 pb-4 sticky top-0 z-50">
         <Navbar />
       </div>
       <div style={{ margin: 0 }} className="z-10">
         <div ref={globeRef} id="globeViz" className="z-1000" />
       </div>
-      <Maps />
+      <Maps /> */}
+        <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
+        <div className="bg-black pt-8 pb-4 sticky top-0 z-[999]">
+          <Navbar />
+        </div>
+        <div style={{ margin: 0 }} className="z-10">
+          <div ref={globeRef} id="globeViz" className="z-1000" />
+        </div>
+
+        <Maps />
+
+    
     </>
   );
 }
