@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
 // import "./k.css"
+import html2canvas from "html2canvas";
+import { takeScreenshot, checkIfBrowserSupported } from "@xata.io/screenshot";
+import axios from "axios";
 
-function DrawRectangles() {
+function DrawRectangles({ divRef }) {
   const [rectangles, setRectangles] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
   const [newRect, setNewRect] = useState(null);
@@ -38,7 +41,7 @@ function DrawRectangles() {
     });
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = async () => {
     if (newRect) setRectangles([...rectangles, newRect]);
     setNewRect(null);
     setIsDrawing(false);
@@ -46,7 +49,155 @@ function DrawRectangles() {
     console.log("🔹 Start Point:", startPoint);
     console.log("🔹 End Point:", endPoint);
     console.log("📏 Width:", dimensions.width, " | Height:", dimensions.height);
+
+    const options = {
+      allowTaint: true, // Allow tainted canvas (can be useful when working with cross-origin images)
+      backgroundColor: null, // Set background color to none (transparent)
+      logging: true, // Enable logging (for debugging)
+      useCors: true, // Enable CORS (for external images to be loaded with CORS)
+    };
+
+    // // Use html2canvas with the specified options
+    // html2canvas(document.body, options).then(function (canvas) {
+    //   // Append the canvas to the body (optional)
+    //   document.body.appendChild(canvas);
+
+    //   // Create a link to download the canvas as an image
+    //   const link = document.createElement("a");
+    //   link.href = canvas.toDataURL(); // Get image data URL from canvas
+    //   link.download = "canvas-image.png"; // Define the default file name for download
+    //   link.click(); // Programmatically trigger a click to download the image
+    // });
+
+    if (checkIfBrowserSupported()) {
+      takeScreenshot().then((screenshot) => {
+        /**
+         * This is a base64-encoded string representing your screenshot.
+         * It can go directly into an <img>'s `src` attribute, or be sent to a server to store.
+         */
+        cropTopFromBase64(screenshot, 245).then((croppedBase64) => {
+          console.log(croppedBase64);
+          downloadScreenshot(croppedBase64); // Use the cropped image
+        });
+        // downloadScreenshot(screenshot);
+
+        console.log(screenshot);
+      });
+    }
   };
+
+  async function downloadScreenshot(base64Data) {
+    // Convert base64 to a Blob
+    const byteCharacters = atob(base64Data.split(",")[1]); // Remove the data URL prefix
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/png" });
+
+    // const formData = new FormData();
+    // formData.append("file", blob, "screenshot.png"); // Append file
+    // formData.append("x1", startPoint.x);
+    // formData.append("y1", startPoint.y);
+    // formData.append("x2", endPoint.x);
+    // formData.append("y2", endPoint.y);
+    // formData.append("width", dimensions.width);
+    // formData.append("height", dimensions.height); // Name it "file" and give it a filename
+
+    // const response = await axios.post(
+    //   "https://493b-117-219-22-193.ngrok-free.app/segment/",
+    //   formData,
+    //   {
+    //     responseType: "blob", // Ensures we receive binary image data
+    //   }
+    // );
+    // const maskArea = response.headers["x-mask-area"];
+    // const maskPercentage = response.headers["x-mask-percentage"];
+    // const imageUrl = document.createElement("a");
+    // imageUrl.href = URL.createObjectURL(response.data);
+    // imageUrl.download = "screenshot.png";
+    // document.body.appendChild(imageUrl);
+    // imageUrl.click();
+    // document.body.removeChild(imageUrl);
+    // Send via Axios
+    // let something = await axios
+    //   .post("https://493b-117-219-22-193.ngrok-free.app/segment", formData, {
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   })
+    //   .then((response) => {
+    //     console.log("Upload successful:", response.data);
+
+    //     console.log("lauda svg is: ", response.data.svg);
+
+    //     const byteCharacters = atob(response.data.svg);
+    //     const byteNumbers = new Array(byteCharacters.length);
+
+    //     for (let i = 0; i < byteCharacters.length; i++) {
+    //       byteNumbers[i] = byteCharacters.charCodeAt(i);
+    //     }
+
+    //     const byteArray = new Uint8Array(byteNumbers);
+    //     const blob = new Blob([byteArray], { type: "image/png" });
+    //     const link = document.createElement("a");
+    //     link.href = URL.createObjectURL(blob);
+    //     link.download = "screenshot.png";
+    //     document.body.appendChild(link);
+    //     link.click();
+    //     document.body.removeChild(link);
+    //   })
+    //   .catch((error) => {
+    //     console.error("Upload error:", error);
+    //   });
+
+    // Create a download link
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "screenshot.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // Free memory
+    // URL.revokeObjectURL(link.href);
+  }
+  function cropTopFromBase64(base64, cropHeight) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        // New height after cropping
+        const newHeight = img.height - cropHeight;
+
+        canvas.width = img.width;
+        canvas.height = newHeight;
+
+        // Draw only the lower part of the image (cropping the top)
+        ctx.drawImage(
+          img,
+          0,
+          cropHeight,
+          img.width,
+          newHeight,
+          0,
+          0,
+          img.width,
+          newHeight
+        );
+
+        // Convert back to base64
+        resolve(canvas.toDataURL("image/png"));
+      };
+      img.onerror = reject;
+      img.src = base64;
+    });
+  }
 
   return (
     <Stage

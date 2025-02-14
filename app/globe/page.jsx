@@ -106,7 +106,7 @@ export default function GlobePage() {
       </div>
       <Maps /> */}
         <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
-        <div className="bg-black pt-8 pb-4 sticky top-0 z-[999]">
+        <div className="bg-transparent pt-8 pb-4 sticky top-0 z-[999]">
           <Navbar />
         </div>
         <div style={{ margin: 0 }} className="z-10">

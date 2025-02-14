@@ -135,12 +135,14 @@ export default function Gmaps() {
   const { selectedPlace, overlayOn } = useUserContext();
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [polylinePath, setPolylinePath] = useState([]);
+  const divRef = useRef(null);
+  
   const handleMapClick = (newPoint) => {
     setPolylinePath((prevPath) => [...prevPath, newPoint]);
   };
   // console.log("overlayOn", overlayOn);
   return (
-    <div className="h-full w-full opacity-30" id="map">
+    <div ref={divRef} className="h-full w-full opacity-30" id="map" >
       <APIProvider
         apiKey={"AIzaSyCBUWqISO_DOQUKhwb7q09wQteK87WOEec"}
         libraries={["places"]}
@@ -156,14 +158,14 @@ export default function Gmaps() {
           mapTypeId="satellite"
           scaleControl="true"
         >
-          {/* <LogScaleValue /> */}
+          <LogScaleValue />
           <ClickLogger onMapClick={handleMapClick} />
           <AdvancedMarker ref={markerRef} position={null} />
           <MapHandler place={selectedPlace} marker={marker} />
         </Map>
         {overlayOn && (
-          <div className="absolute top-full left-0 w-full h-full bg-transparent z-[998] pointer-events-auto">
-            <DrawRectangles />
+          <div className="absolute mt-28 top-full left-0 w-full h-full bg-transparent z-[998] pointer-events-auto">
+            <DrawRectangles divRef={divRef}/>
           </div>
         )}
       </APIProvider>
