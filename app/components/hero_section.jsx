@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 export default function LandingPage() {
     const [animate, setAnimate] = useState(false);
     const [contentChanged, setContentChanged] = useState(false);
-    const [rotating, setRotating] = useState(false); // ✅ Fix: Declare rotating state
 
     const handleClick = () => {
         setAnimate(true);
@@ -23,12 +22,22 @@ export default function LandingPage() {
             >
                 {!contentChanged ? (
                     <>
-                        <div className="flex justify-center">
-                            <Image src="/geosense_logo.png" width={100} height={100} alt="geosense" />
+                        <div className="flex justify-center mt-24">
+                            <Image
+                                src="/geosense_logo.png"
+                                width={100}
+                                height={100}
+                                alt="geosense"
+                            />
                         </div>
                         {/* Logo */}
                         <div className="flex justify-center mb-4 mt-[-24]">
-                            <Image src="/aa.svg" width={500} height={100} alt="geosense" />
+                            <Image
+                                src="/aa.svg"
+                                width={500}
+                                height={100}
+                                alt="geosense"
+                            />
                         </div>
 
                         {/* Heading */}
@@ -48,7 +57,12 @@ export default function LandingPage() {
                         <div className="flex flex-col items-start ml-12">
                             {/* Heading */}
                             <div className="flex justify-center mb-4 mt-16">
-                                <Image src="/ab.svg" width={500} height={100} alt="geosense" />
+                                <Image
+                                    src="/ab.svg"
+                                    width={500}
+                                    height={100}
+                                    alt="geosense"
+                                />
                             </div>
                             <div className="w-80 h-1 bg-blue-500 mb-12"></div>
 
@@ -65,28 +79,21 @@ export default function LandingPage() {
                             </Link>
                         </div>
                     </>
+
                 )}
             </motion.div>
 
-            {/* Moving & Rotating Globe */}
             <motion.div
-                className="mt-24"
-                initial={{ x: 0, y: 0, rotate: 0 }}
-                animate={animate ? { x: "50%", y: "-60%" } : {}}
+                className={animate ? 'mt-24' : 'mt-32'}
+                animate={animate ? { rotate: 360, x: "50%", y: "-60%" } : { rotate: 0, x: 0, y: 0 }}
                 transition={{ duration: 1 }}
-                onAnimationComplete={() => setRotating(true)} // ✅ Fix: Start rotating after moving
             >
-                <motion.div
-                    animate={rotating ? { rotate: 360 } : {}}
-                    transition={rotating ? { duration: 2, repeat: Infinity, ease: "linear" } : {}}
-                >
-                    <Image
-                        src="https://freesvg.org/img/3d-Earth-Globe.png"
-                        alt="Earth view from space"
-                        height={600}
-                        width={600}
-                    />
-                </motion.div>
+                <Image
+                    src="https://freesvg.org/img/3d-Earth-Globe.png"
+                    alt="Earth view from space"
+                    height={600}
+                    width={600}
+                />
             </motion.div>
         </div>
     );
