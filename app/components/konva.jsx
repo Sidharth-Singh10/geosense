@@ -6,9 +6,9 @@ import html2canvas from "html2canvas";
 import { takeScreenshot, checkIfBrowserSupported } from "@xata.io/screenshot";
 import axios from "axios";
 import { useUserContext } from "./user_context";
-
+import { toast } from "react-toastify";
 function DrawRectangles({ divRef }) {
-  const { overlayOn, setOverlayOn, setImageBlob } = useUserContext();
+  const { overlayOn, setOverlayOn, setImageBlob , scaleVal } = useUserContext();
 
   const [rectangles, setRectangles] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -112,7 +112,6 @@ function DrawRectangles({ divRef }) {
     formData.append("width", dimensions.width);
     formData.append("height", dimensions.height); // Name it "file" and give it a filename
     try {
-      console.log("sending lauda");
       const response = await axios.post(
         "https://e4ef-2409-40e3-5000-ed73-c99f-c7b5-bfad-6156.ngrok-free.app/segment/",
         formData,
@@ -123,18 +122,26 @@ function DrawRectangles({ divRef }) {
       console.log(response);
       const imageUrl = document.createElement("a");
       const img = document.createElement("img");
-     
+
       img.src = URL.createObjectURL(response.data);
       divRef.current.innerHTML = "";
       img.style.position = "absolute";
       img.style.zIndex = "999";
       divRef.current.appendChild(img);
+      console.log(response.headers);
+      const maskArea = response.headers["x-mask-area"];
+      // console.log((scaleVal * scaleVal * maskArea) / 4046.85642);
+      console.log("Scale Value:", scaleVal);
+      console.log("Mask Area:", maskArea);
+      
+      toast.success("Area(sq.metres): ",maskArea);
+      // toast.error("heello");
 
-      imageUrl.href = URL.createObjectURL(response.data);
-      imageUrl.download = "screenshot.png";
-      document.body.appendChild(imageUrl);
-      imageUrl.click();
-      document.body.removeChild(imageUrl);
+      // imageUrl.href = URL.createObjectURL(response.data);
+      // imageUrl.download = "screenshot.png";
+      // document.body.appendChild(imageUrl);
+      // imageUrl.click();
+      // document.body.removeChild(imageUrl);
     } catch (error) {
       console.error("Error sending screenshot:", error);
     }
@@ -154,7 +161,7 @@ function DrawRectangles({ divRef }) {
     // document.body.appendChild(a);
     // a.click();
     // document.body.removeChild(a);
-    // const maskArea = response.headers["x-mask-area"];
+
     // const maskPercentage = response.headers["x-mask-percentage"];
     // const imageUrl = document.createElement("a");
     // imageUrl.href = URL.createObjectURL(response.data);
@@ -172,7 +179,6 @@ function DrawRectangles({ divRef }) {
     //   .then((response) => {
     //     console.log("Upload successful:", response.data);
 
-    //     console.log("lauda svg is: ", response.data.svg);
 
     //     const byteCharacters = atob(response.data.svg);
     //     const byteNumbers = new Array(byteCharacters.length);
@@ -195,12 +201,7 @@ function DrawRectangles({ divRef }) {
     //   });
 
     // Create a download link
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "screenshot.png";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+   
 
     // Free memory
     // URL.revokeObjectURL(link.href);
@@ -395,7 +396,6 @@ export default DrawRectangles;
 //     //   .then((response) => {
 //     //     console.log("Upload successful:", response.data);
 
-//     //     console.log("lauda svg is: ", response.data.svg);
 
 //     //     const byteCharacters = atob(response.data.svg);
 //     //     const byteNumbers = new Array(byteCharacters.length);

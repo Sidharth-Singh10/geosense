@@ -7,9 +7,10 @@ export const UserProvider = ({ children }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [overlayOn, setOverlayOn] = useState(false);
   const [imageBlob, setImageBlob] = useState(null);
+  const [scaleVal, setScaleVal] = useState(null);
 
   return (
-    <UserContext.Provider value={{ selectedPlace, setSelectedPlace,overlayOn, setOverlayOn ,imageBlob, setImageBlob}}>
+    <UserContext.Provider value={{ selectedPlace, setSelectedPlace,overlayOn, setOverlayOn ,imageBlob, setImageBlob,scaleVal, setScaleVal}}>
       {children}
     </UserContext.Provider>
   );

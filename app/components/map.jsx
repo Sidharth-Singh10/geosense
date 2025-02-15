@@ -30,6 +30,8 @@ const MapHandler = ({ place, marker }) => {
   return null;
 };
 const LogScaleValue = () => {
+
+  const { setScaleVal } = useUserContext();
   const map = useMap();
 
   useEffect(() => {
@@ -47,6 +49,7 @@ const LogScaleValue = () => {
       const scale =
         (156543.03392 * Math.cos((center.lat() * Math.PI) / 180)) /
         Math.pow(2, zoom);
+      setScaleVal(scale);
 
       console.log("Scale Control Enabled:", map.get("scaleControl"));
       console.log("Zoom Level:", zoom);
@@ -159,7 +162,7 @@ export default function Gmaps() {
           mapTypeId="satellite"
           scaleControl="true"
         >
-          {/* <LogScaleValue /> */}
+          <LogScaleValue />
           <ClickLogger onMapClick={handleMapClick} />
           <AdvancedMarker ref={markerRef} position={null} />
           <MapHandler place={selectedPlace} marker={marker} />
