@@ -2,6 +2,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import SplitText from "@/app/ui_comp/text";
+import DecryptedText from "@/app/ui_comp/de_para"
+
 
 export default function LandingPage() {
     const [animate, setAnimate] = useState(false);
@@ -46,8 +49,28 @@ export default function LandingPage() {
                             </div>
 
                             {/* Heading */}
-                            <p className="text-xl italic">Effortless Land Measurement at Your</p>
-                            <p className="text-xl italic">Fingertips!</p>
+                            <SplitText
+                                text="Effortless Land Measurement at Your"
+                                className="text-xl italic text-center"
+                                delay={100}
+                                animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
+                                animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                                easing="easeOutCubic"
+                                threshold={0.2}
+                                rootMargin="-50px"
+                            />
+                            <SplitText
+                                text="Fingertips!"
+                                className="text-xl italic text-center"
+                                delay={300}
+                                animationFrom={{ opacity: 0, transform: 'translate3d(0,50px,0)' }}
+                                animationTo={{ opacity: 1, transform: 'translate3d(0,0,0)' }}
+                                easing="easeOutCubic"
+                                threshold={0.2}
+                                rootMargin="-50px"
+                            />
+
+
 
                             {/* CTA Button */}
                             <button
@@ -71,11 +94,63 @@ export default function LandingPage() {
                                 </div>
                                 <div className="w-80 h-1 bg-blue-500 mb-12"></div>
 
-                                <p className="text-xl italic">GeoSense is a fast and accurate online tool for measuring land</p>
-                                <p className="text-xl italic">area effortlessly. Just enter a location and get instant </p>
-                                <p className="text-xl italic">results—no complex tools or calculations needed. Whether </p>
-                                <p className="text-xl italic">for real estate, agriculture, or urban planning, GeoSense </p>
-                                <p className="text-xl italic">makes land measurement simple and precise.</p>
+                                <DecryptedText
+                                    text="GeoSense is a fast and accurate online tool for measuring land"
+                                    className="text-xl italic"
+                                    animateOn="view"
+                                    speed={100}
+                                    maxIterations={20}
+                                    revealDirection="center"
+                                    useOriginalCharsOnly="true"
+                                    parentClassName="text-xl italic"
+
+                                />
+                                <DecryptedText
+                                    text="area effortlessly. Just enter a location and get instant "
+                                    className="text-xl italic"
+                                    animateOn="view"
+                                    speed={100}
+                                    maxIterations={20}
+                                    revealDirection="center"
+                                    useOriginalCharsOnly="true"
+                                    parentClassName="text-xl italic"
+
+                                />
+                                <DecryptedText
+                                    text="results—no complex tools or calculations needed. Whether"
+                                    className="text-xl italic"
+                                    animateOn="view"
+                                    speed={100}
+                                    maxIterations={20}
+                                    revealDirection="center"
+                                    useOriginalCharsOnly="true"
+                                    parentClassName="text-xl italic"
+
+                                />
+                                <DecryptedText
+                                    text="for real estate, agriculture, or urban planning, GeoSense "
+                                    className="text-xl italic"
+                                    animateOn="view"
+                                    speed={100}
+                                    maxIterations={20}
+                                    revealDirection="center"
+                                    useOriginalCharsOnly="true"
+                                    parentClassName="text-xl italic"
+
+                                />
+                                <DecryptedText
+                                    text="makes land measurement simple and precise."
+                                    className="text-xl italic"
+                                    animateOn="view"
+                                    speed={100}
+                                    maxIterations={20}
+                                    revealDirection="center"
+                                    useOriginalCharsOnly="true"
+                                    parentClassName="text-xl italic"
+
+                                />
+
+
 
                                 {/* CTA Button */}
                                 <Link href="/globe">
