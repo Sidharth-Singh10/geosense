@@ -1,0 +1,3 @@
+[submodule "GeoSense-Backend"]
+	path = GeoSense-Backend
+	url = https://github.com/NeonKazuha/GeoSense-Backend
