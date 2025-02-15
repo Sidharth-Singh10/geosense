@@ -134,7 +134,7 @@ const PolylineRenderer = ({ path }) => {
 export default function Gmaps() {
   const { selectedPlace, overlayOn } = useUserContext();
   const [markerRef, marker] = useAdvancedMarkerRef();
-  const [polylinePath, setPolylinePath] = useState([]);
+  const [imagestate, setImageState] = useState([]);
   const divRef = useRef(null);
   
   const handleMapClick = (newPoint) => {

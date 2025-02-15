@@ -8,7 +8,7 @@ import axios from "axios";
 import { useUserContext } from "./user_context";
 
 function DrawRectangles({ divRef }) {
-  const { overlayOn, setOverlayOn } = useUserContext();
+  const { overlayOn, setOverlayOn, setImageBlob } = useUserContext();
 
   const [rectangles, setRectangles] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -120,11 +120,12 @@ function DrawRectangles({ divRef }) {
           responseType: "blob", // Ensures we receive binary image data
         }
       );
-      // console.log(response);
+      console.log(response);
       const imageUrl = document.createElement("a");
       const img = document.createElement("img");
+     
       img.src = URL.createObjectURL(response.data);
-      // divRef.current.innerHTML = "";
+      divRef.current.innerHTML = "";
       img.style.position = "absolute";
       img.style.zIndex = "999";
       divRef.current.appendChild(img);
