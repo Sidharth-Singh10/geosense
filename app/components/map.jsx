@@ -143,6 +143,7 @@ export default function Gmaps() {
   // console.log("overlayOn", overlayOn);
   return (
     <div ref={divRef} className="h-full w-full opacity-30" id="map" >
+      
       <APIProvider
         apiKey={"AIzaSyCBUWqISO_DOQUKhwb7q09wQteK87WOEec"}
         libraries={["places"]}
@@ -158,7 +159,7 @@ export default function Gmaps() {
           mapTypeId="satellite"
           scaleControl="true"
         >
-          <LogScaleValue />
+          {/* <LogScaleValue /> */}
           <ClickLogger onMapClick={handleMapClick} />
           <AdvancedMarker ref={markerRef} position={null} />
           <MapHandler place={selectedPlace} marker={marker} />
