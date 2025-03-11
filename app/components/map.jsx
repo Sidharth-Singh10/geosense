@@ -30,7 +30,6 @@ const MapHandler = ({ place, marker }) => {
   return null;
 };
 const LogScaleValue = () => {
-
   const { setScaleVal } = useUserContext();
   const map = useMap();
 
@@ -51,9 +50,9 @@ const LogScaleValue = () => {
         Math.pow(2, zoom);
       setScaleVal(scale);
 
-      console.log("Scale Control Enabled:", map.get("scaleControl"));
-      console.log("Zoom Level:", zoom);
-      console.log("Scale (meters per pixel):", scale);
+      // console.log("Scale Control Enabled:", map.get("scaleControl"));
+      // console.log("Zoom Level:", zoom);
+      // console.log("Scale (meters per pixel):", scale);
     };
 
     logScale(); // Initial log
@@ -138,15 +137,15 @@ export default function Gmaps() {
   const { selectedPlace, overlayOn } = useUserContext();
   const [markerRef, marker] = useAdvancedMarkerRef();
   const [imagestate, setImageState] = useState([]);
+  const [svgContent, setSvgContent] = useState(null);
   const divRef = useRef(null);
-  
+
   const handleMapClick = (newPoint) => {
     setPolylinePath((prevPath) => [...prevPath, newPoint]);
   };
   // console.log("overlayOn", overlayOn);
   return (
-    <div ref={divRef} className="h-full w-full opacity-30" id="map" >
-      
+    <div ref={divRef} className="h-full w-full opacity-30" id="map">
       <APIProvider
         apiKey={"AIzaSyCBUWqISO_DOQUKhwb7q09wQteK87WOEec"}
         libraries={["places"]}
@@ -169,9 +168,21 @@ export default function Gmaps() {
         </Map>
         {overlayOn && (
           <div className="absolute mt-28 top-full left-0 w-full h-full bg-transparent z-[998] pointer-events-auto">
-            <DrawRectangles divRef={divRef}/>
+            <DrawRectangles divRef={divRef} setSvgContent={setSvgContent} />
           </div>
         )}
+        {/* SVG Overlay - rendered on top with highest z-index */}
+        {/* {svgContent && ( */}
+          <div
+            className="absolute mt-28 top-full left-0 w-full h-full bg-transparent z-[998] pointer-events-none"
+          >
+            <div 
+            className="w-full h-full"
+            style={{ maxWidth: '100%', maxHeight: '100%' }}
+            dangerouslySetInnerHTML={{ __html: svgContent }}
+          />
+        </div>
+        {/* // )} */}
       </APIProvider>
     </div>
   );

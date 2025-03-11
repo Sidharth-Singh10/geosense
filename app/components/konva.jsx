@@ -7,7 +7,7 @@ import { takeScreenshot, checkIfBrowserSupported } from "@xata.io/screenshot";
 import axios from "axios";
 import { useUserContext } from "./user_context";
 import { toast } from "react-toastify";
-function DrawRectangles({ divRef }) {
+function DrawRectangles({ divRef, setSvgContent }) {
   const { overlayOn, setOverlayOn, setImageBlob, scaleVal } = useUserContext();
 
   const [rectangles, setRectangles] = useState([]);
@@ -90,35 +90,80 @@ function DrawRectangles({ divRef }) {
     formData.append("y1", startPoint.y + 100);
     formData.append("x2", endPoint.x + 150);
     formData.append("y2", endPoint.y + 100);
+    // formData.append("x1", startPoint.x);
+    // formData.append("y1", startPoint.y);
+    // formData.append("x2", endPoint.x);
+    // formData.append("y2", endPoint.y);
     formData.append("width", dimensions.width);
     formData.append("height", dimensions.height); // Name it "file" and give it a filename
     try {
+      // Previous working Code
+
+      // const response = await axios.post(
+      //   "https://4b42-2409-40e3-38a-44f0-a079-2f29-5124-d5df.ngrok-free.app/svg",
+      //   formData,
+      //   // {
+      //   //   responseType: "blob", // Ensures we receive binary image data
+      //   // }
+      // );
+      // console.log(response);
+      // const imageUrl = document.createElement("a");
+      // const img = document.createElement("img");
+
+      // img.src = URL.createObjectURL(response.data.svg);
+      // divRef.current.innerHTML = "";
+      // img.style.position = "absolute";
+      // img.style.zIndex = "999";
+      // divRef.current.appendChild(img);
+      // console.log(response.headers);
+      // const maskArea = response.headers["x-mask-area"];
+      // console.log((scaleVal * scaleVal * maskArea) / 4046.85642);
+      // console.log("Scale Value:", scaleVal);
+      // console.log("Mask Area:", maskArea);
+
+      // toast.success(
+      //   "Area(sq.metres): ",
+      //   (scaleVal * scaleVal * maskArea) / 4046.85642
+      // );
+
+      // New code start here
+
       const response = await axios.post(
-        "https://e4ef-2409-40e3-5000-ed73-c99f-c7b5-bfad-6156.ngrok-free.app/segment/",
+        "https://4b42-2409-40e3-38a-44f0-a079-2f29-5124-d5df.ngrok-free.app/svg",
         formData,
         {
-          responseType: "blob", // Ensures we receive binary image data
+          responseType: "json",
         }
       );
       console.log(response);
-      const imageUrl = document.createElement("a");
-      const img = document.createElement("img");
+      console.log(response.data.svg);
+      setSvgContent(response.data.svg);
 
-      img.src = URL.createObjectURL(response.data);
-      divRef.current.innerHTML = "";
-      img.style.position = "absolute";
-      img.style.zIndex = "999";
-      divRef.current.appendChild(img);
-      console.log(response.headers);
-      const maskArea = response.headers["x-mask-area"];
-      console.log((scaleVal * scaleVal * maskArea) / 4046.85642);
-      console.log("Scale Value:", scaleVal);
-      console.log("Mask Area:", maskArea);
+      // const svgWrapper = document.createElement("div");
+      // svgWrapper.innerHTML = response.data.svg;
+      // svgWrapper.style.position = "absolute";
+      // svgWrapper.style.top = "0";
+      // svgWrapper.style.left = "0";
+      // svgWrapper.style.width = "100%";
+      // svgWrapper.style.height = "100%";
+      // svgWrapper.style.zIndex = "9999";
+      // svgWrapper.style.pointerEvents = "none";
+      // svgWrapper.style.backgroundColor = "black";
 
-      toast.success(
-        "Area(sq.metres): ",
-        (scaleVal * scaleVal * maskArea) / 4046.85642
-      );
+      // const previousSvgWrappers =
+      //   divRef.current.querySelectorAll(".svg-overlay");
+      // previousSvgWrappers.forEach((wrapper) => wrapper.remove());
+
+      // svgWrapper.classList.add("svg-overlay");
+
+      // divRef.current.appendChild(svgWrapper);
+
+      // toast.success(
+      //   `Area(sq.metres): ${(
+      //     (scaleVal * scaleVal * maskArea) /
+      //     4046.85642
+      //   ).toFixed(4)}`
+      // );
     } catch (error) {
       console.error("Error sending screenshot:", error);
     }
