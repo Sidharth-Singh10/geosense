@@ -51,8 +51,8 @@ const LogScaleValue = () => {
       setScaleVal(scale);
 
       // console.log("Scale Control Enabled:", map.get("scaleControl"));
-      // console.log("Zoom Level:", zoom);
-      // console.log("Scale (meters per pixel):", scale);
+      console.log("Zoom Level:", zoom);
+      console.log("Scale (meters per pixel):", scale);
     };
 
     logScale(); // Initial log

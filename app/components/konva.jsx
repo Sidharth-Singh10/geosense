@@ -96,6 +96,7 @@ function DrawRectangles({ divRef, setSvgContent }) {
     // formData.append("y2", endPoint.y);
     formData.append("width", dimensions.width);
     formData.append("height", dimensions.height); // Name it "file" and give it a filename
+    formData.append("scaleVal",scaleVal);
     try {
       // Previous working Code
 
@@ -129,16 +130,17 @@ function DrawRectangles({ divRef, setSvgContent }) {
       // New code start here
 
       const response = await axios.post(
-        "https://4b42-2409-40e3-38a-44f0-a079-2f29-5124-d5df.ngrok-free.app/svg",
+        "https://faa5-2409-40e3-102c-8d07-5ee-b428-81c1-ee76.ngrok-free.app/img",
         formData,
         {
           responseType: "json",
         }
       );
       console.log(response);
-      console.log(response.data.svg);
-      setSvgContent(response.data.svg);
-
+      console.log("gaudhindeeee madarchoddddddddddddd")
+      console.log(response.data.image_blob);
+      // setSvgContent(response.data.svg);
+      downloadHexImage(response.data.image_blob, "screenshot.png");
       // const svgWrapper = document.createElement("div");
       // svgWrapper.innerHTML = response.data.svg;
       // svgWrapper.style.position = "absolute";
@@ -167,6 +169,22 @@ function DrawRectangles({ divRef, setSvgContent }) {
     } catch (error) {
       console.error("Error sending screenshot:", error);
     }
+  }
+  function downloadHexImage(hexString, filename = 'image.png') {
+    // Convert hex string to a Uint8Array
+    const bytes = new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+  
+    // Create a Blob from the byte array (type: PNG)
+    const blob = new Blob([bytes], { type: 'image/png' });
+  
+    // Create an object URL and trigger download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href); // Clean up
   }
   function cropTopFromBase64(base64, cropHeight) {
     return new Promise((resolve, reject) => {
