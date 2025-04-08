@@ -1,23 +1,14 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import {
-  APIProvider,
-  ControlPosition,
-  MapControl,
-  AdvancedMarker,
-  Map,
-  useMap,
-  useMapsLibrary,
-  useAdvancedMarkerRef,
-} from "@vis.gl/react-google-maps";
+import { useMapsLibrary } from "@vis.gl/react-google-maps";
 import { useUserContext } from "./user_context";
 
 const PlaceAutocomplete = () => {
   const { setSelectedPlace } = useUserContext();
   const [placeAutocomplete, setPlaceAutocomplete] = useState(null);
   const inputRef = useRef(null);
-  const places = useMapsLibrary("places"); // Now works because of APIProvider in Home.js
+  const places = useMapsLibrary("places");
 
   useEffect(() => {
     if (!places || !inputRef.current) return;

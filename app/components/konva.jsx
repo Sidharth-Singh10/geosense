@@ -1,7 +1,5 @@
-// export default DrawRectangles;
 import React, { useState } from "react";
 import { Stage, Layer, Rect } from "react-konva";
-// import "./k.css"
 import html2canvas from "html2canvas";
 import { takeScreenshot, checkIfBrowserSupported } from "@xata.io/screenshot";
 import axios from "axios";
@@ -23,7 +21,6 @@ function DrawRectangles({ divRef, setSvgContent }) {
     setIsDrawing(true);
     setNewRect({ x, y, width: 0, height: 0 });
 
-    //
     setStartPoint({ x, y }); // Store start point
     setDimensions({ width: 0, height: 0 });
   };
@@ -96,38 +93,9 @@ function DrawRectangles({ divRef, setSvgContent }) {
     // formData.append("y2", endPoint.y);
     formData.append("width", dimensions.width);
     formData.append("height", dimensions.height); // Name it "file" and give it a filename
-    formData.append("scaleVal",scaleVal);
+    formData.append("scaleVal", scaleVal);
     try {
-      // Previous working Code
-
-      // const response = await axios.post(
-      //   "https://4b42-2409-40e3-38a-44f0-a079-2f29-5124-d5df.ngrok-free.app/svg",
-      //   formData,
-      //   // {
-      //   //   responseType: "blob", // Ensures we receive binary image data
-      //   // }
-      // );
-      // console.log(response);
-      // const imageUrl = document.createElement("a");
-      // const img = document.createElement("img");
-
-      // img.src = URL.createObjectURL(response.data.svg);
-      // divRef.current.innerHTML = "";
-      // img.style.position = "absolute";
-      // img.style.zIndex = "999";
-      // divRef.current.appendChild(img);
-      // console.log(response.headers);
-      // const maskArea = response.headers["x-mask-area"];
-      // console.log((scaleVal * scaleVal * maskArea) / 4046.85642);
-      // console.log("Scale Value:", scaleVal);
-      // console.log("Mask Area:", maskArea);
-
-      // toast.success(
-      //   "Area(sq.metres): ",
-      //   (scaleVal * scaleVal * maskArea) / 4046.85642
-      // );
-
-      // New code start here
+      // Workssss
 
       const response = await axios.post(
         "https://faa5-2409-40e3-102c-8d07-5ee-b428-81c1-ee76.ngrok-free.app/img",
@@ -137,48 +105,25 @@ function DrawRectangles({ divRef, setSvgContent }) {
         }
       );
       console.log(response);
-      console.log("gaudhindeeee madarchoddddddddddddd")
+      console.log();
       console.log(response.data.image_blob);
-      // setSvgContent(response.data.svg);
+
       downloadHexImage(response.data.image_blob, "screenshot.png");
-      // const svgWrapper = document.createElement("div");
-      // svgWrapper.innerHTML = response.data.svg;
-      // svgWrapper.style.position = "absolute";
-      // svgWrapper.style.top = "0";
-      // svgWrapper.style.left = "0";
-      // svgWrapper.style.width = "100%";
-      // svgWrapper.style.height = "100%";
-      // svgWrapper.style.zIndex = "9999";
-      // svgWrapper.style.pointerEvents = "none";
-      // svgWrapper.style.backgroundColor = "black";
-
-      // const previousSvgWrappers =
-      //   divRef.current.querySelectorAll(".svg-overlay");
-      // previousSvgWrappers.forEach((wrapper) => wrapper.remove());
-
-      // svgWrapper.classList.add("svg-overlay");
-
-      // divRef.current.appendChild(svgWrapper);
-
-      // toast.success(
-      //   `Area(sq.metres): ${(
-      //     (scaleVal * scaleVal * maskArea) /
-      //     4046.85642
-      //   ).toFixed(4)}`
-      // );
     } catch (error) {
       console.error("Error sending screenshot:", error);
     }
   }
-  function downloadHexImage(hexString, filename = 'image.png') {
+  function downloadHexImage(hexString, filename = "image.png") {
     // Convert hex string to a Uint8Array
-    const bytes = new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-  
+    const bytes = new Uint8Array(
+      hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
+    );
+
     // Create a Blob from the byte array (type: PNG)
-    const blob = new Blob([bytes], { type: 'image/png' });
-  
+    const blob = new Blob([bytes], { type: "image/png" });
+
     // Create an object URL and trigger download
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     document.body.appendChild(link);

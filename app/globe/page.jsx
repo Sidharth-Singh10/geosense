@@ -6,10 +6,8 @@ import * as THREE from "three";
 import Maps from "../maps/page";
 import Navbar from "../components/navbar";
 import { useUserContext } from "../components/user_context";
-import DrawRectangles from "../components/konva";
 export default function GlobePage() {
   const globeRef = useRef();
-  const { overlayOn } = useUserContext();
 
   const initGlobe = () => {
     const world = (globeRef.current.__world = new Globe(globeRef.current, {
@@ -88,7 +86,7 @@ export default function GlobePage() {
             }
             const navC = document.getElementById("navC");
             if (navC) {
-              navC.style.background="transparent"
+              navC.style.background = "transparent";
             }
           }
         };
@@ -101,25 +99,15 @@ export default function GlobePage() {
 
   return (
     <>
-      {/* <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
-      <div className="bg-black pt-8 pb-4 sticky top-0 z-50">
+      <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
+      <div id="navC" className="bg-black pt-8 pb-4 sticky top-0 z-[999]">
         <Navbar />
       </div>
       <div style={{ margin: 0 }} className="z-10">
         <div ref={globeRef} id="globeViz" className="z-1000" />
       </div>
-      <Maps /> */}
-        <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
-        <div id="navC" className="bg-black pt-8 pb-4 sticky top-0 z-[999]">
-          <Navbar />
-        </div>
-        <div style={{ margin: 0 }} className="z-10">
-          <div ref={globeRef} id="globeViz" className="z-1000" />
-        </div>
 
-        <Maps />
-
-    
+      <Maps />
     </>
   );
 }
