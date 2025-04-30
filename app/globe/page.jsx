@@ -100,7 +100,7 @@ export default function GlobePage() {
   return (
     <>
       <Script src="//unpkg.com/globe.gl" onLoad={initGlobe} />
-      <div id="navC" className="bg-black pt-8 pb-4 sticky top-0 z-[999]">
+      <div id="navC" className="bg-black pt-8 pb-4 sticky top-0 z-[998]">
         <Navbar />
       </div>
       <div style={{ margin: 0 }} className="z-10">

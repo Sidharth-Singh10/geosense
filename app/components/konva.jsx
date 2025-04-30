@@ -5,8 +5,10 @@ import { takeScreenshot, checkIfBrowserSupported } from "@xata.io/screenshot";
 import axios from "axios";
 import { useUserContext } from "./user_context";
 import { toast } from "react-toastify";
+
 function DrawRectangles({ divRef, setSvgContent }) {
-  const { overlayOn, setOverlayOn, setImageBlob, scaleVal } = useUserContext();
+  const { overlayOn, setOverlayOn, setImageBlob, scaleVal, addMeasurement } =
+    useUserContext();
 
   const [rectangles, setRectangles] = useState([]);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -60,16 +62,13 @@ function DrawRectangles({ divRef, setSvgContent }) {
          */
         cropTopFromBase64(screenshot, 105).then((croppedBase64) => {
           console.log(croppedBase64);
-          downloadScreenshot(croppedBase64); // Use the cropped image
+          uploadScreenshot(croppedBase64); // Use the cropped image
         });
-        // downloadScreenshot(screenshot);
-
-        // console.log(screenshot);
       });
     }
   };
 
-  async function downloadScreenshot(base64Data) {
+  async function uploadScreenshot(base64Data) {
     // Convert base64 to a Blob
     const byteCharacters = atob(base64Data.split(",")[1]); // Remove the data URL prefix
     const byteNumbers = new Array(byteCharacters.length);
@@ -80,6 +79,16 @@ function DrawRectangles({ divRef, setSvgContent }) {
 
     const byteArray = new Uint8Array(byteNumbers);
     const blob = new Blob([byteArray], { type: "image/png" });
+
+    console.log("⬆️ Uploading screenshot with values:");
+    console.log("x1:", startPoint.x + 100);
+    console.log("y1:", startPoint.y + 100);
+    console.log("x2:", endPoint.x + 150);
+    console.log("y2:", endPoint.y + 100);
+    console.log("width:", dimensions.width);
+    console.log("height:", dimensions.height);
+    console.log("scaleVal:", scaleVal);
+    console.log("file blob:", blob);
 
     const formData = new FormData();
     formData.append("file", blob, "screenshot.png"); // Append file
@@ -94,25 +103,34 @@ function DrawRectangles({ divRef, setSvgContent }) {
     formData.append("width", dimensions.width);
     formData.append("height", dimensions.height); // Name it "file" and give it a filename
     formData.append("scaleVal", scaleVal);
+
     try {
       // Workssss
 
       const response = await axios.post(
-        "https://faa5-2409-40e3-102c-8d07-5ee-b428-81c1-ee76.ngrok-free.app/img",
+        "http://192.168.82.43:9000/img",
         formData,
         {
           responseType: "json",
         }
       );
-      console.log(response);
-      console.log();
-      console.log(response.data.image_blob);
 
-      downloadHexImage(response.data.image_blob, "screenshot.png");
+      console.log("Response:", response.data);
+
+      // Add the measurement to the context
+      if (response.data && response.data.image_blob) {
+        const maskArea = response.data.area || 0;
+        addMeasurement(maskArea, response.data.image_blob);
+
+        // Show success toast
+        toast.success(`Area calculated: ${maskArea.toFixed(2)} acres`);
+      }
     } catch (error) {
       console.error("Error sending screenshot:", error);
+      toast.error("Failed to calculate area. Please try again.");
     }
   }
+
   function downloadHexImage(hexString, filename = "image.png") {
     // Convert hex string to a Uint8Array
     const bytes = new Uint8Array(
@@ -131,6 +149,7 @@ function DrawRectangles({ divRef, setSvgContent }) {
     document.body.removeChild(link);
     URL.revokeObjectURL(link.href); // Clean up
   }
+
   function cropTopFromBase64(base64, cropHeight) {
     return new Promise((resolve, reject) => {
       const img = new Image();
