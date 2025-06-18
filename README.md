@@ -14,6 +14,7 @@
 ## Overview
 
 GeoSense-Backend is an advanced machine learning system designed for precise land boundary detection. The system utilizes the Segment-Anything Model (SAM) architecture to achieve highly accurate boundary detection in geospatial data. Through integration with Roboflow for data annotation, the system provides comprehensive land segmentation capabilities with documented accuracy rates of 75-90%.
+Video: https://drive.google.com/file/d/1SN7KI1FBtuXRM0s3r9nWUarDeCnij7WY/view?usp=sharing
 
 ## Key Features
 
