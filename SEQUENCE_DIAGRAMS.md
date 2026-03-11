@@ -129,7 +129,7 @@ sequenceDiagram
     participant MapComp as Map Component
     participant GMap as Google Maps API
 
-    Note over User,GMap: User has selected a place; coordinates are in UserContext
+    Note over User,GMap: User has selected a place — coordinates are in UserContext
 
     Context-->>Globe: coordinates updated (lat, lng)
 
@@ -156,7 +156,7 @@ The drawing interaction and subsequent screenshot process.
 sequenceDiagram
     actor User
     participant Konva as Konva Stage/Layer
-    participant Rect as Konva Rect Shape
+    participant KRect as Konva Rect Shape
     participant DomToImg as dom-to-image-more
     participant MapDOM as Map DOM Element
 
@@ -164,12 +164,12 @@ sequenceDiagram
 
     User->>Konva: mousedown at (startX, startY)
     Konva->>Konva: isDrawing = true
-    Konva->>Rect: Create rect at (startX, startY, 0, 0)
+    Konva->>KRect: Create rect at (startX, startY, 0, 0)
 
     User->>Konva: mousemove to (currentX, currentY)
-    Konva->>Rect: Update width = currentX - startX
-    Konva->>Rect: Update height = currentY - startY
-    Rect-->>User: Rectangle visually resizes in real-time
+    Konva->>KRect: Update width = currentX - startX
+    Konva->>KRect: Update height = currentY - startY
+    KRect-->>User: Rectangle visually resizes in real-time
 
     User->>Konva: mouseup at (endX, endY)
     Konva->>Konva: isDrawing = false
